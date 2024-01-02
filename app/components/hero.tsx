@@ -2,7 +2,7 @@ import { Link } from "@remix-run/react";
 import { SearchIcon, ExternalLinkIcon } from "@heroicons/react/solid";
 import { Container } from "./container";
 
-export function HomepageHero({ showTitle = true }) {
+export function Hero({ showTitle = true }) {
   return (
     <div className="bg-slate-50">
       <Container>
@@ -31,7 +31,7 @@ export function HomepageHero({ showTitle = true }) {
                   Ir para CodersClub
                 </a>
                 <Link
-                  to="/article-new"
+                  to="/articles/new"
                   className="text-sm font-medium hover:text-primary"
                 >
                   Novo artigo
