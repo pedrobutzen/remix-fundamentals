@@ -8,30 +8,32 @@ import {
 } from "@remix-run/react";
 import { prisma } from "~/db.server";
 import { json, type ActionArgs, redirect } from "@remix-run/node";
+import { z } from "zod";
+import { InputError } from "~/components/inputError";
+
+const ArticleScheme = z.object({
+  title: z.string().trim().min(1, "Title is required"),
+  content: z.string().trim().min(1, "Content is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  collectionId: z.string().trim().min(1, "Select a collection"),
+});
+type Article = z.infer<typeof ArticleScheme>;
 
 export async function action({ request }: ActionArgs) {
   const payload = Object.fromEntries(await request.formData());
-  const { title, content, description, collectionId } = payload;
+  const validation = ArticleScheme.safeParse(payload);
 
-  if (!title || !content || !description || !collectionId) {
-    return json(
-      {
-        error: {
-          message: "Missing fields",
-        },
-      },
-      {
-        status: 400,
-      }
-    );
+  if (!validation.success) {
+    return json(validation.error.format());
   }
 
+  const article: Article = validation.data;
   const { id } = await prisma.article.create({
     data: {
-      title: title as string,
-      description: description as string,
-      content: content as string,
-      collectionId: Number(collectionId),
+      title: article.title,
+      description: article.description,
+      content: article.content,
+      collectionId: Number(article.collectionId),
     },
   });
 
@@ -79,17 +81,20 @@ export default function Index() {
               placeholder="Título"
               className="block w-full px-4 rounded-md py-3 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:text-slate-900 focus:outline-none"
             />
+            <InputError errors={actionData?.title?._errors} />
             <input
               type="text"
               name="description"
               placeholder="Description"
               className="block w-full px-4 rounded-md py-3 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:text-slate-900 focus:outline-none"
             />
+            <InputError errors={actionData?.description?._errors} />
             <textarea
               name="content"
               placeholder="Content"
               className="block w-full px-4 rounded-md py-3 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:text-slate-900 focus:outline-none"
             />
+            <InputError errors={actionData?.content?._errors} />
             <select
               name="collectionId"
               className="block w-full px-4 rounded-md py-3 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:text-slate-900 focus:outline-none"
@@ -101,9 +106,7 @@ export default function Index() {
                 </option>
               ))}
             </select>
-            {actionData?.error?.message && (
-              <div className="text-red-500">{actionData.error.message}</div>
-            )}
+            <InputError errors={actionData?.collectionId?._errors} />
             <div>
               <button
                 type="submit"
