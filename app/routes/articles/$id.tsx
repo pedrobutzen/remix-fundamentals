@@ -1,10 +1,10 @@
 import { Container } from "~/components/container";
 import { Breadcrumb, BreadcrumbItem } from "~/components/breadcrumb";
-import { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { prisma } from "~/db.server";
 import { useLoaderData } from "@remix-run/react";
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const article = await prisma.article.findUnique({
     where: {
       id: Number(params.id),
@@ -14,7 +14,7 @@ export async function loader({ params }: LoaderArgs) {
       title: true,
       description: true,
       content: true,
-      Collection: {
+      collection: {
         select: {
           id: true,
           name: true,
@@ -34,8 +34,8 @@ export default function Index() {
       <Container className="py-10">
         <Breadcrumb>
           <BreadcrumbItem to="/">Página Inicial</BreadcrumbItem>
-          <BreadcrumbItem to={`/collections/${article?.Collection?.id}`}>
-            {article?.Collection?.name}
+          <BreadcrumbItem to={`/collections/${article?.collection?.id}`}>
+            {article?.collection?.name}
           </BreadcrumbItem>
           <BreadcrumbItem to={`/articles/${article?.id}`}>
             {article?.title}

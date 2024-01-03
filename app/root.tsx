@@ -1,4 +1,4 @@
-import type { MetaFunction, LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,18 +12,21 @@ import {
 import styles from "./styles/app.css";
 import type { ReactNode } from "react";
 import { Hero } from "./components/hero";
+import { Container } from "./components/container";
 
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "New Remix App",
-  viewport: "width=device-width,initial-scale=1",
-});
+export function meta() {
+  return [
+    { title: "New Remix App" },
+    { charset: "utf-8" },
+    { viewport: "width=device-width,initial-scale=1" },
+  ];
+}
 
-function Document({ children }: { children: ReactNode }) {
+function Document({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
       <head>
@@ -48,5 +51,23 @@ export default function App() {
       <Hero showTitle={location.pathname === "/"} />
       <Outlet />
     </Document>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <Container>
+          <h1>Algo deu errado!</h1>
+        </Container>
+        <Scripts />
+      </body>
+    </html>
   );
 }

@@ -1,16 +1,3 @@
-type InputErrorProps = {
-  errors?: Array<string>;
-};
-
-export function InputError({ errors }: InputErrorProps) {
-  return (
-    <>
-      {errors?.length &&
-        errors.map((error, i) => (
-          <p className="text-red-500 text-sm !mt-2" key={i}>
-            {error}
-          </p>
-        ))}
-    </>
-  );
+export function InputError({ error }: { error: string | undefined }) {
+  return <>{error && <p className="text-red-500 text-sm !mt-2">{error}</p>}</>;
 }

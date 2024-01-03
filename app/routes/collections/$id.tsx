@@ -1,10 +1,15 @@
 import { Breadcrumb, BreadcrumbItem } from "~/components/breadcrumb";
 import { Container } from "~/components/container";
-import { Link, useCatch, useLoaderData } from "@remix-run/react";
+import {
+  Link,
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react";
 import { prisma } from "~/db.server";
-import { Response, type LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const collection = await prisma.collection.findUnique({
     where: {
       id: Number(params.id),
@@ -24,8 +29,9 @@ export async function loader({ params }: LoaderArgs) {
   });
 
   if (!collection) {
-    throw new Response("Not found", {
+    throw new Response(null, {
       status: 404,
+      statusText: "Collection not found",
     });
   }
 
@@ -60,26 +66,24 @@ export default function Index() {
   );
 }
 
-export function CatchBoundary() {
-  const caught = useCatch();
+export function ErrorBoundary() {
+  const error = useRouteError();
 
-  if (caught.status === 404) {
+  if (isRouteErrorResponse(error)) {
     return (
       <Container>
-        <h1>404</h1>
-        <p>Essa coleção não existe.</p>
+        <h1>{error.status}</h1>
+        <p>{error.statusText}</p>
       </Container>
     );
   }
 
-  throw new Error("Oops!");
-}
+  const errorMessage = error instanceof Error ? error.message : "Unknown error";
 
-export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Container>
       <h1>Algo deu errado!</h1>
-      <pre>{error.message}</pre>
+      <p>{errorMessage}</p>
     </Container>
   );
 }

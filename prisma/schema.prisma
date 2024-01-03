@@ -27,6 +27,6 @@ model Article {
   content      String
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  Collection   Collection? @relation(fields: [collectionId], references: [id])
+  collection   Collection? @relation(fields: [collectionId], references: [id])
   collectionId Int?
 }

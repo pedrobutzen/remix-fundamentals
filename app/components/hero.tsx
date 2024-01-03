@@ -1,8 +1,14 @@
-import { Link } from "@remix-run/react";
-import { SearchIcon, ExternalLinkIcon } from "@heroicons/react/solid";
+import { Form, Link, useNavigation } from "@remix-run/react";
+import {
+  ArrowTopRightOnSquareIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/solid";
 import { Container } from "./container";
 
 export function Hero({ showTitle = true }) {
+  const navigation = useNavigation();
+  const q = new URLSearchParams(navigation.location?.search).get("q");
+
   return (
     <div className="bg-slate-50">
       <Container>
@@ -23,11 +29,11 @@ export function Hero({ showTitle = true }) {
                   rel="noopener noreferrer"
                   className="text-sm font-medium hover:text-primary inline-flex items-center"
                 >
-                  <ExternalLinkIcon className="mr-2 w-[1rem] h-[1rem]">
+                  <ArrowTopRightOnSquareIcon className="mr-2 w-[1rem] h-[1rem]">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <line x1="10" y1="14" x2="21" y2="3"></line>
-                  </ExternalLinkIcon>
+                  </ArrowTopRightOnSquareIcon>
                   Ir para CodersClub
                 </a>
                 <Link
@@ -43,26 +49,32 @@ export function Hero({ showTitle = true }) {
 
         <div className="pb-6">
           {showTitle && (
-            <h1 className="text-4xl font-light mb-6">
+            <h1 className="text-4xl font-light my-6">
               Dicas e respostas da Coders Club
             </h1>
           )}
 
-          <div className="relative rounded-md shadow-sm inline-flex items-center w-full">
+          <Form
+            className="relative rounded-md shadow-sm inline-flex items-center w-full"
+            action="/"
+            method="get"
+          >
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <SearchIcon
+              <MagnifyingGlassIcon
                 className="h-6 w-6 text-slate-400"
                 aria-hidden="true"
               />
             </div>
             <input
               type="text"
-              name="search"
+              name="q"
               id="search"
-              className="block w-full pl-14 rounded-md py-4 text-slate-400 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:text-slate-900 focus:outline-none"
+              key={q}
+              defaultValue={q || ""}
+              className="block w-full pl-14 rounded-md py-4 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:outline-none"
               placeholder="Buscar por artigos"
             />
-          </div>
+          </Form>
         </div>
       </Container>
     </div>
