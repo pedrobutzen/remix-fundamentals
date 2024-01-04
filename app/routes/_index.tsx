@@ -18,6 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           id: true,
           title: true,
           description: true,
+          collection: true,
         },
       })
     : [];
@@ -47,6 +48,7 @@ export default function Index() {
       className="w-full bg-slate-50 shadow rounded-sm p-6 block"
       key={article.id}
     >
+      <span className="text-slate-400">{article.collection?.name}</span>
       <h2 className="text-xl text-slate-900">{article.title}</h2>
       <p className="text-slate-400 mt-1">{article.description}</p>
     </Link>

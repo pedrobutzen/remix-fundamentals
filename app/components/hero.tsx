@@ -7,7 +7,7 @@ import { Container } from "./container";
 
 export function Hero({ showTitle = true }) {
   const navigation = useNavigation();
-  const q = new URLSearchParams(navigation.location?.search).get("q");
+  const q = new URLSearchParams(navigation.location?.search).get("q") || "";
 
   return (
     <div className="bg-slate-50">
@@ -70,7 +70,7 @@ export function Hero({ showTitle = true }) {
               name="q"
               id="search"
               key={q}
-              defaultValue={q || ""}
+              defaultValue={q}
               className="block w-full pl-14 rounded-md py-4 text-slate-900 bg-white ring-1 ring-slate-200 transition-colors text-lg focus:outline-none"
               placeholder="Buscar por artigos"
             />

@@ -26,6 +26,17 @@ export function meta() {
   ];
 }
 
+export default function App() {
+  const location = useLocation();
+
+  return (
+    <Document>
+      <Hero showTitle={location.pathname === "/"} />
+      <Outlet />
+    </Document>
+  );
+}
+
 function Document({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
@@ -40,17 +51,6 @@ function Document({ children }: Readonly<{ children: ReactNode }>) {
         <LiveReload />
       </body>
     </html>
-  );
-}
-
-export default function App() {
-  const location = useLocation();
-
-  return (
-    <Document>
-      <Hero showTitle={location.pathname === "/"} />
-      <Outlet />
-    </Document>
   );
 }
 

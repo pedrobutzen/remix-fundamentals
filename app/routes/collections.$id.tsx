@@ -78,12 +78,10 @@ export function ErrorBoundary() {
     );
   }
 
-  const errorMessage = error instanceof Error ? error.message : "Unknown error";
-
   return (
     <Container>
       <h1>Algo deu errado!</h1>
-      <p>{errorMessage}</p>
+      <p>{error instanceof Error ? error.message : "Unknown error"}</p>
     </Container>
   );
 }
